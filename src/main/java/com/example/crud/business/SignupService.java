@@ -47,20 +47,17 @@ public class SignupService {
     @Getter
     class SignupServiceInfo {
         private final String username;
-        private final String password;
 
         /**
          * @AllArgsConstructor와 동일
          * public SignupServiceInfo(String username, String password) {
          *     this.username = username;
-         *     this.password = password;
          * }
          */
 
         private static SignupServiceInfo from(User user) {
             return SignupServiceInfo.builder()
                     .username(user.getUsername())
-                    .password(user.getPassword())
                     .build();
         }
     }
