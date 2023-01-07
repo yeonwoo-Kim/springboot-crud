@@ -1,8 +1,10 @@
 package com.example.crud.presentation;
 
 import com.example.crud.business.SignupService;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import com.example.crud.business.dto.SignupServiceCommand;
+import com.example.crud.business.dto.SignupServiceInfo;
+import com.example.crud.presentation.dto.SignupRequestDto;
+import com.example.crud.presentation.dto.SignupResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Email;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,28 +21,10 @@ public class SignupController {
 
     @PostMapping("/user/signup")
     public ResponseEntity<SignupResponseDto> signup(@RequestBody @Valid SignupRequestDto dto) {
-        SignupService.SignupServiceCommand command = dto.toCommand();
-        SignupService.SignupServiceInfo info = signupService.command(command);
+        SignupServiceCommand command = dto.toCommand(); // DTO를 DB에 적용하기 위한 command 객체로 바꿈
+        SignupServiceInfo info = signupService.command(command); // command하기 위한 비즈니스 로직 수행 후 정보를 보여줄 info객체 받기
 
-        SignupResponseDto responseDto = new SignupResponseDto(info.getUsername());
-        return new ResponseEntity(responseDto, HttpStatus.CREATED);
-    }
-
-    @AllArgsConstructor
-    @Getter
-    class SignupRequestDto {
-        @Email
-        private final String username;
-        private final String password;
-
-        private SignupService.SignupServiceCommand toCommand() {
-            return new SignupService.SignupServiceCommand(username, password);
-        }
-    }
-
-    @AllArgsConstructor
-    @Getter
-    class SignupResponseDto {
-        private final String username;
+        SignupResponseDto responseDto = new SignupResponseDto(info.getUsername(), info.getPhone());
+        return new ResponseEntity(responseDto, HttpStatus.CREATED); // 리소스가 생성됨을 알리는 HTTP 상태코드와 리소스 정보를 응답하는 responseDTO return
     }
 }

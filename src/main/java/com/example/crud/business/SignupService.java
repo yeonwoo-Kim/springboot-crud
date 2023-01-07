@@ -1,9 +1,9 @@
 package com.example.crud.business;
 
+import com.example.crud.business.dto.SignupServiceCommand;
+import com.example.crud.business.dto.SignupServiceInfo;
 import com.example.crud.domain.User;
 import com.example.crud.persistence.UserRepository;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,36 +21,10 @@ public class SignupService {
         if (isExists) throw new RuntimeException(command.getUsername());
 
         // 중복된 username이 아니라면 회원가입
-        User savedUser = userRepository.save(command.toEntity());
+        User savedUser = userRepository.save(command.toEntity()); // SignupServiceCommand를 User로 변환해서 DB 저장
 
-        // 회원가입된 엔티티를 dto로 변환해서 return
-        return new SignupServiceInfo(savedUser.getUsername());
+        // 회원가입된 엔티티를 DTO로 변환해서 return
+        return new SignupServiceInfo(savedUser.getUsername(), savedUser.getPhone());
     }
 
-    @AllArgsConstructor
-    @Getter
-    public static class SignupServiceCommand {
-        private final String username;
-        private final String password;
-
-        private User toEntity() {
-            return User.builder()
-                    .username(this.username)
-                    .password(this.password)
-                    .build();
-        }
-    }
-
-    @AllArgsConstructor
-    @Getter
-    public class SignupServiceInfo {
-        private final String username;
-
-        /**
-         * @AllArgsConstructor와 동일
-         * public SignupServiceInfo(String username, String password) {
-         *     this.username = username;
-         * }
-         */
-    }
 }
