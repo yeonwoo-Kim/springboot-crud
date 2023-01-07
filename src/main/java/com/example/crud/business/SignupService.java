@@ -2,7 +2,9 @@ package com.example.crud.business;
 
 import com.example.crud.domain.User;
 import com.example.crud.persistence.UserRepository;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +18,8 @@ public class SignupService {
     @Transactional
     public SignupServiceInfo command(SignupServiceCommand command) {
         // username으로 가입된 회원이 있는지 확인하고, 중복된다면 예외 throw
-        Boolean isExists = userRepository.existsByUsername(command.username);
-        if (isExists) throw new RuntimeException(command.username);
+        Boolean isExists = userRepository.existsByUsername(command.getUsername());
+        if (isExists) throw new RuntimeException(command.getUsername());
 
         // 중복된 username이 아니라면 회원가입
         User savedUser = userRepository.save(command.toEntity());
@@ -26,14 +28,11 @@ public class SignupService {
         return SignupServiceInfo.from(savedUser);
     }
 
+    @AllArgsConstructor
+    @Getter
     class SignupServiceCommand {
         private final String username;
         private final String password;
-
-        SignupServiceCommand(String username, String password) {
-            this.username = username;
-            this.password = password;
-        }
 
         private User toEntity() {
             return User.builder()
@@ -43,15 +42,20 @@ public class SignupService {
         }
     }
 
+    @AllArgsConstructor
+    @Builder
+    @Getter
     class SignupServiceInfo {
         private final String username;
         private final String password;
 
-        @Builder
-        SignupServiceInfo(String username, String password) {
-            this.username = username;
-            this.password = password;
-        }
+        /**
+         * @AllArgsConstructor와 동일
+         * public SignupServiceInfo(String username, String password) {
+         *     this.username = username;
+         *     this.password = password;
+         * }
+         */
 
         private static SignupServiceInfo from(User user) {
             return SignupServiceInfo.builder()
