@@ -30,7 +30,8 @@ public class SignupService {
 
     @AllArgsConstructor
     @Getter
-    class SignupServiceCommand {
+    @Builder
+    public class SignupServiceCommand {
         private final String username;
         private final String password;
 
@@ -45,7 +46,7 @@ public class SignupService {
     @AllArgsConstructor
     @Builder
     @Getter
-    class SignupServiceInfo {
+    public class SignupServiceInfo {
         private final String username;
 
         /**
