@@ -3,7 +3,6 @@ package com.example.crud.business;
 import com.example.crud.domain.User;
 import com.example.crud.persistence.UserRepository;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,13 +24,12 @@ public class SignupService {
         User savedUser = userRepository.save(command.toEntity());
 
         // 회원가입된 엔티티를 dto로 변환해서 return
-        return SignupServiceInfo.from(savedUser);
+        return new SignupServiceInfo(savedUser.getUsername());
     }
 
     @AllArgsConstructor
     @Getter
-    @Builder
-    public class SignupServiceCommand {
+    public static class SignupServiceCommand {
         private final String username;
         private final String password;
 
@@ -44,7 +42,6 @@ public class SignupService {
     }
 
     @AllArgsConstructor
-    @Builder
     @Getter
     public class SignupServiceInfo {
         private final String username;
@@ -55,11 +52,5 @@ public class SignupService {
          *     this.username = username;
          * }
          */
-
-        private static SignupServiceInfo from(User user) {
-            return SignupServiceInfo.builder()
-                    .username(user.getUsername())
-                    .build();
-        }
     }
 }

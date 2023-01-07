@@ -35,10 +35,7 @@ public class SignupController {
         private final String password;
 
         private SignupService.SignupServiceCommand toCommand() {
-            return SignupService.SignupServiceCommand.builder()
-                    .username(this.username)
-                    .password(this.password)
-                    .build();
+            return new SignupService.SignupServiceCommand(username, password);
         }
     }
 
