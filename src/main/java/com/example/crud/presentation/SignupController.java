@@ -20,7 +20,7 @@ public class SignupController {
     private final SignupService signupService;
 
     @PostMapping("/user/signup")
-    public ResponseEntity<SignupResponseDto> signup(@RequestBody @Valid SignupRequestDto dto) {
+    public ResponseEntity<SignupResponseDto> signup(@RequestBody @Valid SignupRequestDto dto) throws Exception {
         SignupServiceCommand command = dto.toCommand(); // DTO를 DB에 적용하기 위한 command 객체로 바꿈
         SignupServiceInfo info = signupService.command(command); // command하기 위한 비즈니스 로직 수행 후 정보를 보여줄 info객체 받기
 
